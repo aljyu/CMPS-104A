@@ -88,11 +88,11 @@ void cpplines (FILE* pipe, char* filename) {
       char* fgets_rc = fgets (buffer, LINESIZE, pipe);
       if (fgets_rc == NULL) break;
       chomp (buffer, '\n');
-//      printf ("%s:line %d: [%s]\n", filename, linenr, buffer);
+      printf ("%s:line %d: [%s]\n", filename, linenr, buffer);
       // http://gcc.gnu.org/onlinedocs/cpp/Preprocessor-Output.html
       int sscanf_rc = sscanf (buffer, "# %d \"%[^\"]\"", &linenr, filename);
       if (sscanf_rc == 2) {
-//         printf ("DIRECTIVE: line %d file \"%s\"\n", linenr, filename);
+         printf ("DIRECTIVE: line %d file \"%s\"\n", linenr, filename);
          continue;
       }
       char* savepos = NULL;
@@ -102,7 +102,7 @@ void cpplines (FILE* pipe, char* filename) {
          char* token = strtok_r (bufptr, " \t\n", &savepos);
          bufptr = NULL;
          if (token == NULL) break;
-//         printf ("token %d.%d: [%s]\n", linenr, tokenct, token);
+         printf ("token %d.%d: [%s]\n", linenr, tokenct, token);
       }
       ++linenr;
    }
@@ -118,7 +118,7 @@ void parse_options(int argc, char** argv) {
             // Find where in the line the symbol "@" appears and call set_debugflags
             // Starts checking at index 1 because index 0 will be "oc"
             // optarg is the following argv element (the flags in this case)
-            fprintf(stdout, "Option @\n");
+//            fprintf(stdout, "Option @\n");
             symbol_flags = optarg;
             break;
          case 'D':
@@ -126,45 +126,48 @@ void parse_options(int argc, char** argv) {
             // Find where in the line the letter "D" appears and set everything from that letter onwards equal to d_option_args
             // Starts checking at index 1 because index 0 will be "oc"
             // optarg is the following argv element (the string in this case)
-            fprintf(stdout, "Option D\n");
+//            fprintf(stdout, "Option D\n");
             d_option_args = optarg;
             break;
          case 'l':
             yy_flex_debug = 1;
-            fprintf(stdout, "Option l\n");
+//            fprintf(stdout, "Option l\n");
             break;
          case 'y':
             yydebug = 1;
-            fprintf(stdout, "Option y\n");
+//            fprintf(stdout, "Option y\n");
             break;
          default:
-            fprintf(stdout, "No valid options were specified\n");
+            fprintf(stderr, "No valid options were specified\n");
          break;
       }
    }
 }
 
 // Looks at the argument's filename suffix. If the suffix is not .oc or if it does not exist, the program should abort with an error message.
-void check_suffix (const char* program_name) {
+int check_suffix (const char* program_name) {
    char buf[PATH_MAX + 1];
    char file_basename[strlen(program_name)];
    const char* file_extension = strrchr(program_name, '.');
    char* pathname = realpath(program_name, buf);
+   int exit_status = EXIT_SUCCESS;
 
    pathname = buf;
-   fprintf(stdout, "\n\nThe program's name is %s\n\n", pathname);
+//   fprintf(stdout, "\n\nThe program's name is %s\n\n", pathname);
 
    if (pathname == NULL) {
-      fprintf(stdout, "The program name is missing.\n");
+//      fprintf(stdout, "The program name is missing.\n");
    }
    else {
       // If there is no suffix
       if (file_extension == NULL) {
-         fprintf(stdout, "The input filename must have a suffix!\n");
+         fprintf(stderr, "The input filename must have a suffix!\n");
+         exit_status = EXIT_FAILURE;
       }
       // If the suffix is not .oc
       else if (strcmp(file_extension, ".oc") != 0) {
-         fprintf(stdout, "The input filename has a suffix that is not .oc!\n");
+         fprintf(stderr, "The input filename has a suffix that is not .oc!\n");
+         exit_status = EXIT_FAILURE;
       }
       // If the suffix is .oc
       else {
@@ -172,12 +175,17 @@ void check_suffix (const char* program_name) {
          program_basename = file_basename;
       }
    }
+   return exit_status;
 }
 
 int main (int argc, char** argv) {
    const char* execname = basename (argv[0]);
    int exit_status = EXIT_SUCCESS;
    parse_options(argc, argv);
+
+   const char* program_name = argv[optind];
+   check_suffix(program_name);
+
 //   Debug statements for me
 /*
    fprintf(stdout, "RESULTS:\n");
@@ -186,9 +194,8 @@ int main (int argc, char** argv) {
    fprintf(stdout, "Program name: %s\n", argv[optind]);
 */ 
    // optind is the last element in argv (the program name)
-   const char* program_name = argv[optind];
-   check_suffix(program_name);
    for (int argi = 1; argi < argc; ++argi) {
+
       char* filename = argv[argi];
       string command;
       // If the "-D string" option was used, it should be passed to cpp
@@ -198,7 +205,7 @@ int main (int argc, char** argv) {
       else {
          command = CPP + " " + filename;
       }
-//      printf ("command=\"%s\"\n", command.c_str());
+      printf ("command=\"%s\"\n", command.c_str());
       FILE* pipe = popen (command.c_str(), "r");
       if (pipe == NULL) {
          exit_status = EXIT_FAILURE;
