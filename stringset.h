@@ -1,0 +1,2 @@
+// Stringset header file
+
