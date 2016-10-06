@@ -182,9 +182,9 @@ int main (int argc, char** argv) {
    const char* execname = basename (argv[0]);
    int exit_status = EXIT_SUCCESS;
    parse_options(argc, argv);
-
    const char* program_name = argv[optind];
    check_suffix(program_name);
+
 
 //   Debug statements for me
 /*
@@ -192,31 +192,28 @@ int main (int argc, char** argv) {
    fprintf(stdout, "Arguments for option @: %s\n", symbol_flags);
    fprintf(stdout, "Arguments for option D: %s\n", d_option_args);   
    fprintf(stdout, "Program name: %s\n", argv[optind]);
-*/ 
+*/
    // optind is the last element in argv (the program name)
-   for (int argi = 1; argi < argc; ++argi) {
-
-      char* filename = argv[argi];
-      string command;
-      // If the "-D string" option was used, it should be passed to cpp
-      if (d_option) {
-         command = CPP + " -D " + d_option_args + " " + filename;
-      }
-      else {
-         command = CPP + " " + filename;
-      }
-      printf ("command=\"%s\"\n", command.c_str());
-      FILE* pipe = popen (command.c_str(), "r");
-      if (pipe == NULL) {
-         exit_status = EXIT_FAILURE;
-         fprintf (stderr, "%s: %s: %s\n", execname, command.c_str(), strerror (errno));
-      }
-      else {
-         cpplines (pipe, filename);
-         int pclose_rc = pclose (pipe);
-         eprint_status (command.c_str(), pclose_rc);
-         if (pclose_rc != 0) exit_status = EXIT_FAILURE;
-      }
+   char* filename = argv[optind];
+   string command;
+   // If the "-D string" option was used, it should be passed to cpp
+   if (d_option) {
+      command = CPP + " -D " + d_option_args + " " + filename;
+   }
+   else {
+      command = CPP + " " + filename;
+   }
+   printf ("command=\"%s\"\n", command.c_str());
+   FILE* pipe = popen (command.c_str(), "r");
+   if (pipe == NULL) {
+      exit_status = EXIT_FAILURE;
+      fprintf (stderr, "%s: %s: %s\n", execname, command.c_str(), strerror (errno));
+   }
+   else {
+      cpplines (pipe, filename);
+      int pclose_rc = pclose (pipe);
+      eprint_status (command.c_str(), pclose_rc);
+      if (pclose_rc != 0) exit_status = EXIT_FAILURE;
    }
    return exit_status;
 }
