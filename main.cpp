@@ -161,6 +161,7 @@ void parse_options(int argc, char** argv) {
             // optarg is the following argv element (the flags in this case)
 //            fprintf(stdout, "Option @\n");
             symbol_flags = optarg;
+            set_debugflags(symbol_flags);
             break;
          case 'D':
             d_option = 1;
