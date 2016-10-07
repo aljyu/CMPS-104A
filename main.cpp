@@ -1,3 +1,8 @@
+/*
+ * Partner: Alice Yu (aljyu)
+ * Partner: Paula Espiritu (mespirit)
+*/
+
 #include <string>
 using namespace std;
 // Needed for namespace functino of find_last_of

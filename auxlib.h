@@ -1,3 +1,9 @@
+/*
+ * Partner: Alice Yu (aljyu)
+ * Partner: Paula Espiritu (mespirit)
+*/
+
+
 #ifndef __AUXLIB_H__
 #define __AUXLIB_H__
 

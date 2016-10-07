@@ -1,3 +1,7 @@
+/*
+ * Partner: Alice Yu (aljyu)
+ * Partner: Paula Espiritu (mespirit)
+*/
 
 #include <assert.h>
 #include <errno.h>

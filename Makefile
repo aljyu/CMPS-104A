@@ -1,3 +1,8 @@
+#
+# Partner: Alice Yu (aljyu)
+# Partner: Paula Espiritu (mespirit)
+#
+
 GCC        = g++ -g -O0 -Wall -Wextra -std=gnu++14
 MKDEP      = g++ -MM -std=gnu++14
 VALGRIND   = valgrind --leak-check=full --show-reachable=yes

@@ -1,3 +1,8 @@
+/*
+ * Partner: Alice Yu (aljyu)
+ * Partner: Paula Espiritu (mespirit)
+*/
+
 #include <string>
 #include <unordered_set>
 using namespace std;
