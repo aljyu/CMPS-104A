@@ -38,8 +38,8 @@ int d_option = 0;
 // If the option "-D string" was used, pass the option and its argument to cpp
 char* d_option_args;
 // The basename of the input filename
-const char* program_basename = (const char*)malloc(60*sizeof(char));
-char* name = (char*)malloc(60*sizeof(char));
+const char* program_basename = new char[1024];
+char* name = new char[1024];
 
 
 // Chomp the last character from a buffer if it is delim.
