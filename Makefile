@@ -4,7 +4,7 @@ VALGRIND   = valgrind --leak-check=full --show-reachable=yes
 
 MKFILE     = Makefile
 DEPFILE    = Makefile.dep
-SOURCES    = main.cpp auxlib.ccp cppstrtok.cpp stringset.cpp
+SOURCES    = main.cpp auxlib.cpp stringset.cpp
 OBJECTS    = ${SOURCES:.cpp=.o}
 EXECBIN    = oc
 SRCFILES   = ${HEADERS} ${SOURCES} ${MKFILE}
@@ -25,7 +25,7 @@ ci :
 	checksource ${CHECKINS}
 
 clean :
-	- rm ${OBJECTS}
+	- rm ${OBJECTS} ${DEPFILE}
 
 spotless : clean
 	- rm ${EXECBIN} ${LISTING} ${LISTING:.ps=.pdf} ${DEPFILE} \
@@ -41,8 +41,7 @@ dep :
 include Makefile.dep
 
 test : ${EXECBIN}
-	${VALGRIND} ${EXECBIN} foo.oc 1>test.out 2>test.err
-   morecat ${SMALLFILES} test.out test.err >test.li 2&1
+	${VALGRIND} ${EXECBIN} foo.oc 1>test.out 2>&1
 
 misc.lis : ${DEPFILE} foo.oc foo1.oh foo2.oh
 	catnv ${DEPFILE} foo.oc foo1.oh foo2.oh >misc.lis

@@ -1,5 +1,7 @@
 #include <string>
 using namespace std;
+// Needed for namespace functino of find_last_of
+#include <iostream>
 
 #include <errno.h>
 #include <assert.h>
@@ -7,6 +9,7 @@ using namespace std;
 #include <libgen.h>
 // Needed for fprintf()
 #include <stdio.h>
+// Needed for malloc()
 #include <stdlib.h>
 // Needed for strcmp()
 #include <string.h>
@@ -24,6 +27,7 @@ using namespace std;
 const string CPP = "/usr/bin/cpp";
 constexpr size_t LINESIZE = 1024;
 
+
 // Keeps track of the yydebug and yy_flex_debug flag
 int yydebug = 0;
 int yy_flex_debug = 0;
@@ -34,8 +38,8 @@ int d_option = 0;
 // If the option "-D string" was used, pass the option and its argument to cpp
 char* d_option_args;
 // The basename of the input filename
-char* program_basename;
-
+const char* program_basename = (const char*)malloc(60*sizeof(char));
+char* name = (char*)malloc(60*sizeof(char));
 
 
 // Chomp the last character from a buffer if it is delim.
@@ -46,13 +50,16 @@ void chomp (char* string, char delim) {
    if (*nlpos == delim) *nlpos = '\0';
 }
 
+/*
 // Print the meaning of a signal.
 static void eprint_signal (const char* kind, int signal) {
    fprintf (stderr, ", %s %d", kind, signal);
    const char* sigstr = strsignal (signal);
    if (sigstr != NULL) fprintf (stderr, " %s", sigstr);
 }
+*/
 
+/*
 // Print the status returned from a subprocess.
 void eprint_status (const char* command, int status) {
    if (status == 0) return; 
@@ -74,9 +81,12 @@ void eprint_status (const char* command, int status) {
    }
    fprintf (stderr, "\n");
 }
+*/
 
 // Run cpp against the lines of the file.
 void cpplines (FILE* pipe, char* filename) {
+   // Declare an instance of the stringset struct
+   stringset string_set_ADT;
    int linenr = 1;
    char inputname[LINESIZE];
    strcpy (inputname, filename);
@@ -87,7 +97,7 @@ void cpplines (FILE* pipe, char* filename) {
       chomp (buffer, '\n');
 //      printf ("%s:line %d: [%s]\n", filename, linenr, buffer);
       // http://gcc.gnu.org/onlinedocs/cpp/Preprocessor-Output.html
-      int sscanf_rc = sscanf (buffer, "# %d \"%[^\"]\"", &linenr, filename);
+      int sscanf_rc = sscanf (buffer, "# %d \"%[^\"]\"", &linenr, inputname);
       if (sscanf_rc == 2) {
 //         printf ("DIRECTIVE: line %d file \"%s\"\n", linenr, filename);
          continue;
@@ -100,20 +110,19 @@ void cpplines (FILE* pipe, char* filename) {
          bufptr = NULL;
          if (token == NULL) break;
 //         printf ("token %d.%d: [%s]\n", linenr, tokenct, token);
-         stringset::intern (token);
+         string_set_ADT.intern(token);
       }
       ++linenr;
    }
-   const char* trace_file_name = strcat(program_basename, ".str");
+   program_basename = name;
+//printf("Program basename is %s\n", program_basename);
+//printf("Basename is %s\n", name);
+   const char* trace_file_name = strcat(name, ".str");
+//printf("Trace file name is %s\n", trace_file_name);
+   FILE* trace_file = fopen(trace_file_name, "w");
+   string_set_ADT.dump(trace_file);
 
-
-
-//   fprintf(stdout, "The name of the trace file is %s\n", trace_file_name);
-
-
-
-   FILE* trace_file = fopen (trace_file_name, "w");
-   stringset::dump (trace_file);
+   fclose(trace_file);
 }
 
 // Takes in a line and parses through all of the options
@@ -153,46 +162,46 @@ void parse_options(int argc, char** argv) {
 }
 
 // Looks at the argument's filename suffix. If the suffix is not .oc or if it does not exist, the program should abort with an error message.
-int check_suffix (const char* program_name) {
-   char buf[PATH_MAX + 1];
-   char file_basename[strlen(program_name)];
+void check_suffix (const char* program_name, char* filename) {
    const char* file_extension = strrchr(program_name, '.');
-   char* pathname = realpath(program_name, buf);
-   int exit_status = EXIT_SUCCESS;
+   char* pathname = basename(filename);
+   std::string filepath = pathname;
+   std::string filepath_basename = filepath.substr(0, strlen(pathname) - 3);
 
-   pathname = buf;
 //   fprintf(stdout, "\n\nThe program's name is %s\n\n", pathname);
 
    if (pathname == NULL) {
-//      fprintf(stdout, "The program name is missing.\n");
+      fprintf(stderr, "The program name is missing.\n");
    }
    else {
       // If there is no suffix
       if (file_extension == NULL) {
          fprintf(stderr, "The input filename must have a suffix!\n");
-         exit_status = EXIT_FAILURE;
       }
       // If the suffix is not .oc
       else if (strcmp(file_extension, ".oc") != 0) {
          fprintf(stderr, "The input filename has a suffix that is not .oc!\n");
-         exit_status = EXIT_FAILURE;
       }
       // If the suffix is .oc
       else {
-         strncpy(file_basename, program_name, strlen(program_name) - 3);
-         program_basename = file_basename;
+         program_basename = filepath_basename.c_str();
+//printf("%s\n", program_basename);
+         strcpy(name, program_basename);
+//printf("%s\n", name);
       }
    }
-   return exit_status;
 }
 
 int main (int argc, char** argv) {
    const char* execname = basename (argv[0]);
    int exit_status = EXIT_SUCCESS;
+   int pass = 0;
+
    parse_options(argc, argv);
    const char* program_name = argv[optind];
-   check_suffix(program_name);
-
+   char* file_name = argv[optind];
+   check_suffix(program_name, file_name);
+//printf("%s\n", program_basename);
 
 //   Debug statements for me
 /*
@@ -203,25 +212,36 @@ int main (int argc, char** argv) {
 */
    // optind is the last element in argv (the program name)
    char* filename = argv[optind];
-   string command;
-   // If the "-D string" option was used, it should be passed to cpp
-   if (d_option) {
-      command = CPP + " -D " + d_option_args + " " + filename;
-   }
-   else {
-      command = CPP + " " + filename;
-   }
-   printf ("command=\"%s\"\n", command.c_str());
-   FILE* pipe = popen (command.c_str(), "r");
-   if (pipe == NULL) {
-      exit_status = EXIT_FAILURE;
-      fprintf (stderr, "%s: %s: %s\n", execname, command.c_str(), strerror (errno));
-   }
-   else {
-      cpplines (pipe, filename);
-      int pclose_rc = pclose (pipe);
-      eprint_status (command.c_str(), pclose_rc);
-      if (pclose_rc != 0) exit_status = EXIT_FAILURE;
+   for (int argi = 1; argi < argc; ++argi) {
+      string command;
+      // If the "-D string" option was used, it should be passed to cpp
+      if (d_option) {
+         if (pass == 0) {
+            command = CPP + " -D " + d_option_args + " " + filename;
+            pass = 1;
+//            printf ("command=\"%s\"\n", command.c_str());
+         }
+      }
+      else {
+         if (pass == 0) {
+            command = CPP + " " + filename;
+            pass = 1;
+//            printf ("command=\"%s\"\n", command.c_str());
+         }
+      }
+      FILE* pipe = popen (command.c_str(), "r");
+      if (pipe == NULL) {
+         exit_status = EXIT_FAILURE;
+         fprintf (stderr, "%s: %s: %s\n", execname, command.c_str(), strerror (errno));
+      }
+      else {
+//printf("3: %s\n", program_basename);
+         cpplines (pipe, filename);
+//printf("%s\n", program_basename);
+         int pclose_rc = pclose (pipe);
+         eprint_status (command.c_str(), pclose_rc);
+         if (pclose_rc != 0) exit_status = EXIT_FAILURE;
+      }
    }
    return exit_status;
 }
