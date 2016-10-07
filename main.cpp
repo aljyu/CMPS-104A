@@ -38,8 +38,8 @@ int d_option = 0;
 // If the option "-D string" was used, pass the option and its argument to cpp
 char* d_option_args;
 // The basename of the input filename
-const char* program_basename = (const char*)malloc(60*sizeof(char));
-char* name = (char*)malloc(60*sizeof(char));
+const char* program_basename = new char[1024];
+char* name = new char[1024];
 
 
 // Chomp the last character from a buffer if it is delim.
@@ -89,6 +89,7 @@ void cpplines (FILE* pipe, char* filename) {
    stringset string_set_ADT;
    int linenr = 1;
    char inputname[LINESIZE];
+   
    strcpy (inputname, filename);
    for (;;) {
       char buffer[LINESIZE];
@@ -115,13 +116,36 @@ void cpplines (FILE* pipe, char* filename) {
       ++linenr;
    }
    program_basename = name;
-//printf("Program basename is %s\n", program_basename);
-//printf("Basename is %s\n", name);
+   
+   
+//   printf("name is: %s\n", name);
    const char* trace_file_name = strcat(name, ".str");
+//   printf("trace_file_name is: %s\n", trace_file_name);
+   
+/*
+   // If the trace file already exists, just replace the old file's contents with the new contents
+   if (strcmp(file_already_exists, str_extension) == 0) {
+      printf("Already exists\n");
+      trace_file_name = name;
+      strcpy(name, program_basename);
+   }
+   // If the trace file doesn't already exist, create a file with the specified name and insert the contents inside
+   else {
+      printf("Doesn't exist\n");
+      strcpy(name, program_basename);
+   }
+//printf("trace_file_name: %s\n", trace_file_name);
+//printf("filename: %s\n", filename);
+//printf("%s\n", program_basename);
+//         strcpy(name, program_basename);
+//printf("%s\n", name);
+*/
+   
+   
+//printf("Program basename is %s\n", program_basename);
 //printf("Trace file name is %s\n", trace_file_name);
    FILE* trace_file = fopen(trace_file_name, "w");
    string_set_ADT.dump(trace_file);
-
    fclose(trace_file);
 }
 
@@ -168,8 +192,6 @@ void check_suffix (const char* program_name, char* filename) {
    std::string filepath = pathname;
    std::string filepath_basename = filepath.substr(0, strlen(pathname) - 3);
 
-//   fprintf(stdout, "\n\nThe program's name is %s\n\n", pathname);
-
    if (pathname == NULL) {
       fprintf(stderr, "The program name is missing.\n");
    }
@@ -185,9 +207,7 @@ void check_suffix (const char* program_name, char* filename) {
       // If the suffix is .oc
       else {
          program_basename = filepath_basename.c_str();
-//printf("%s\n", program_basename);
          strcpy(name, program_basename);
-//printf("%s\n", name);
       }
    }
 }
@@ -212,36 +232,34 @@ int main (int argc, char** argv) {
 */
    // optind is the last element in argv (the program name)
    char* filename = argv[optind];
-   for (int argi = 1; argi < argc; ++argi) {
-      string command;
-      // If the "-D string" option was used, it should be passed to cpp
-      if (d_option) {
-         if (pass == 0) {
-            command = CPP + " -D " + d_option_args + " " + filename;
-            pass = 1;
+
+
+   string command;
+   // If the "-D string" option was used, it should be passed to cpp
+   if (d_option) {
+      if (pass == 0) {
+         command = CPP + " -D " + d_option_args + " " + filename;
+         pass = 1;
 //            printf ("command=\"%s\"\n", command.c_str());
-         }
       }
-      else {
-         if (pass == 0) {
-            command = CPP + " " + filename;
-            pass = 1;
+   }
+   else {
+      if (pass == 0) {
+         command = CPP + " " + filename;
+         pass = 1;
 //            printf ("command=\"%s\"\n", command.c_str());
-         }
       }
-      FILE* pipe = popen (command.c_str(), "r");
-      if (pipe == NULL) {
-         exit_status = EXIT_FAILURE;
-         fprintf (stderr, "%s: %s: %s\n", execname, command.c_str(), strerror (errno));
-      }
-      else {
-//printf("3: %s\n", program_basename);
-         cpplines (pipe, filename);
-//printf("%s\n", program_basename);
-         int pclose_rc = pclose (pipe);
-         eprint_status (command.c_str(), pclose_rc);
-         if (pclose_rc != 0) exit_status = EXIT_FAILURE;
-      }
+   }
+   FILE* pipe = popen (command.c_str(), "r");
+   if (pipe == NULL) {
+      exit_status = EXIT_FAILURE;
+      fprintf (stderr, "%s: %s: %s\n", execname, command.c_str(), strerror (errno));
+   }
+   else {
+      cpplines (pipe, filename);
+      int pclose_rc = pclose (pipe);
+      eprint_status (command.c_str(), pclose_rc);
+      if (pclose_rc != 0) exit_status = EXIT_FAILURE;
    }
    return exit_status;
 }
