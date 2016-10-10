@@ -203,7 +203,7 @@ void check_suffix (const char* program_name, char* filename) {
 }
 
 int main (int argc, char** argv) {
-    const char* execname = basename (argv[0]);
+    set_execname(argv[0]);
     int exit_status = EXIT_SUCCESS;
     int pass = 0;
 
@@ -240,8 +240,8 @@ int main (int argc, char** argv) {
         
         FILE* pipe = popen (command.c_str(), "r");
         if (pipe == NULL) {
-            exit_status = EXIT_FAILURE;
-            fprintf (stderr, "%s: %s: %s\n", execname, 
+            //exit_status = EXIT_FAILURE;
+            errprintf ("%s: %s\n",
             command.c_str(), strerror (errno));
         }
         else {
@@ -251,5 +251,6 @@ int main (int argc, char** argv) {
             if (pclose_rc != 0) exit_status = EXIT_FAILURE;
         }
     }
+    delete[] name;
     return exit_status;
 }
