@@ -44,7 +44,7 @@ int d_option = 0;
 // argument to cpp
 char* d_option_args;
 // The basename of the input filename
-const char* program_basename = new char[1024];
+const char* program_basename = nullptr;
 char* name = new char[1024];
 
 
@@ -204,6 +204,7 @@ void check_suffix (const char* program_name, char* filename) {
 
 int main (int argc, char** argv) {
     set_execname(argv[0]);
+    program_basename = basename(argv[0]);
     int exit_status = EXIT_SUCCESS;
     int pass = 0;
 
