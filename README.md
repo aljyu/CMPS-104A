@@ -1,2 +1,2 @@
 # CMPS-104A
-Compiler Design - Fall 2016
+Compiler Design - UCSC Fall 2016
