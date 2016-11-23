@@ -3,6 +3,18 @@
 FILE* oil;
 
 
+void emit_string_const() {
+	for (int index = 1; index <= stringcons.size(); index++) {
+		
+	}
+}
+
+void struct() {
+	for (int child = 0; child < root->children.size(); child++) {
+		
+	}
+}
+
 void emit_prolog() {
 
 }
