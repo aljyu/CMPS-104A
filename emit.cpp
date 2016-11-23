@@ -9,9 +9,11 @@ void emit_string_const() {
 	}
 }
 
-void struct() {
+void emit_struct() {
 	for (int child = 0; child < root->children.size(); child++) {
-		
+		if (child->symbol == TOK_STRUCT){
+			emit_struct (itor);	
+		}
 	}
 }
 
