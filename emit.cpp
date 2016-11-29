@@ -6,25 +6,6 @@ string eight_spaces = "        ";
 // Section 3.1(b)
 extern vector<struct astree*> string_const_queue;
 
-void emit_basetype (astree* root) {
-   if (root->sym->attributes[ATTR_int])
-      fprintf (outf, "int");
-
-   if (root->sym->attributes[ATTR_void])
-      fprintf (outf, "void");
-
-   if (root->sym->attributes[ATTR_string])
-      fprintf (outf, "char*");
-
-   if (root->sym->attributes[ATTR_struct])
-      fprintf (outf, "struct %s*", root->sym->struct_name->c_str());
-
-   if (root->sym->attributes[ATTR_array])
-      fprintf (outf, "*");
-
-   fprintf (outf, " ");
-}
-
 
 // Section 2.1
 void emit_global_init(astree* tree) {
@@ -37,22 +18,6 @@ void emit_main(astree* tree) {
 //	emit_global_init(tree);
 	//emit(tree);
 }
-
-void emit_function(astree* child) {
-    leftChild = child->children[0];
-    rightChild = child->children[1];
-
-    emit_basetype(leftChild);
-   // fprintf(oil_file, "__%s (\n", leftChild->children.back()->lexinfo->c_str());
-//    emit_parameter(rightChild);
-    //fprintf(oil_file, "{\n");
-//    emit_block(child->children[2]);
-    //fprintf(oil_file, "}\n");
-}
-
-
-
-
 
 /*
 // Helper function for emit_while that emits the statement
@@ -113,19 +78,36 @@ void emit_while(astree* tree) {
 	emit_statement(tree->children[1]);
 	fprintf(oil_file, "goto while_%d_%d_%d;\n break_%d_%d_%d:;\n", tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset, tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
 }
+*/
 
-void emit_function(astree* child) {
-    leftChild = child->children[0];
-    rightChild = child->children[1];
-
-    emit_basetype(leftChild)'
-    fprintf(oil_file, "__%s (\n", leftChild->children.back()->lexinfo->c_str());
-//    emit_parameter(rightChild);
-    fprintf(oil_file, "{\n");
-//    emit_block(child->children[2]);
-    fprintf(oil_file, "}\n");
+// Helper function for emit_function
+void emit_func_name (astree* root) {
+   if (root->sym->attributes[ATTR_int]) {
+      fprintf (oil_file, "int ");
+   }
+   if (root->sym->attributes[ATTR_void]) {
+      fprintf (oil_file, "void ");
+   }
+   if (root->sym->attributes[ATTR_string]) {
+      fprintf (oil_file, "char* ");
+   }
 }
 
+// Section 2.1(d) and MSI
+void emit_function(astree* tree) {
+    for (auto child : tree->children) {
+        if (child->token_code == TOK_FUNCTION) {
+            emit_func_name(child->children[0]);
+            fprintf(oil_file, "__%s (\n", child->children[0]->children.back()->lexinfo->c_str());
+            //emit_params(child->children[1]);
+            fprintf(oil_file, "{\n");
+            //emit_func_body(child->children[2]);
+            fprintf(oil_file, "}\n");
+        }
+    }
+}
+
+/*
 void emit_immediate_children(astree* tree) {
     for (int childIdx = 0; childIdx < tree->children.size(); childIdx++) {
         if (tree->children[childIdx]->token_code == TOK_FUNCTION) {
@@ -195,7 +177,7 @@ void emit_program(astree* tree) {
     emit_stringdef();
     //emit_vardef();
 //    emit_global_vars(tree);
-    //emit_function(tree);
+    emit_function(tree);
 }
 
 // Section 3.1
