@@ -1,7 +1,6 @@
 #include "emit.h"
 
 extern FILE* oil_file;
-vector<astree*> global_list;
 // Section 2.1
 string eight_spaces = "        ";
 // Section 3.1(b)
@@ -21,6 +20,65 @@ void emit_main(astree* tree) {
 }
 
 /*
+// Helper function for emit_while that emits the statement
+void emit_statement(astree* node) {
+	
+}
+
+// Helper function for Section 3.2 that returns the name of the operand
+string emit_oper_name(astree* node) {
+	return ;
+}
+
+// Helper function for emit_while that emits a child or expression unless it's an operand
+void emit_node(astree* node) {
+	if () {
+		
+		return;
+	}
+	
+}
+
+// Section 3.2(h)
+// The "return" statement does not have an operand. Therefore, just return.
+void emit_return_wo_oper() {
+	fprintf(oil_file, "%s return;\n", eight_spaces.c_str());
+}
+
+// Section 3.2(h)
+// The "return" statement has an operand. Therefore, return the operand.
+void emit_return_w_oper(astree* tree) {
+	fprintf(oil_file, "%sreturn %s;\n", eight_spaces.c_str(), );
+}
+
+// Section 3.2(g)
+void emit_if(astree* tree) {
+	emit_node(tree->children[0]);
+	fprintf(oil_file, "%sif (!%s) goto fi_%d_%d_%d;\n", eight_spaces.c_str(), emit_oper_name(tree), tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+	emit_node(tree->children[1]);
+	fprintf(oil_file, "fi_%d_%d_%d:;\n", tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+}
+
+// Section 3.2(f)
+void emit_ifelse(astree* tree) {
+	emit_node(tree->children[0]);
+	fprintf(oil_file, "%sif (!%s) goto else_%d_%d_%d;\n", eight_spaces.c_str(), emit_oper_name(tree), tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+	emit_node(tree->children[1]);
+	fprintf(oil_file, "%sgoto fi_%d_%d_%d;\n", eight_spaces.c_str(), tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+	fprintf(oil_file, "else_%d_%d_%d:;\n", tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+	emit_node(tree->children[2]);
+	fprintf(oil_file, "fi_%d_%d_%d:;\n", tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+}
+
+// Section 3.2(e)
+void emit_while(astree* tree) {
+	fprintf(oil_file, "while_%d_%d_%d:\n;", tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+	emit_node(tree->children[0]);
+	fprintf(oil_file, "%sif (!%s) goto break_%d_%d_%d;\n", eight_spaces.c_str(), emit_oper_name(tree), tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+	emit_statement(tree->children[1]);
+	fprintf(oil_file, "goto while_%d_%d_%d;\n break_%d_%d_%d:;\n", tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset, tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
+}
+
 void emit_function(astree* child) {
     leftChild = child->children[0];
     rightChild = child->children[1];
@@ -48,6 +106,7 @@ void emit_global_vars(astree* tree) {
 //            global_list.pushback(childIdx);
         }
     }
+    // Section 2.4(a)
     for (size_t index = 0; index < global_list.size(); index++) {
 //        emit_basetype(global_list[index]->children[0]);
         fprintf(oil_file, "__%s;\n", global_list[index]->children[0]->children.back()->lexinfo->c_str());
@@ -57,6 +116,7 @@ void emit_global_vars(astree* tree) {
 
 // Section 2.1(b)
 void emit_string_const() {
+// MSI: Maybe use block_nr of yyprse_astree instead?
     int charIndex;
 
     for (size_t index = 0; index < string_const_queue.size(); index++) {
@@ -70,14 +130,14 @@ void emit_field_name(astree* child, const string* childName) {
 	fprintf(oil_file, "f_%s_%s", childName->c_str(), child->children.back()->lexinfo->c_str());
 }
 
-// Section 3.1(a)
+// Section 2.1(a) and 3.1(a)
 void emit_struct(astree* tree) {
     astree* currChild = nullptr;
     for (size_t child = 0; child < tree->children.size(); child++) {
         currChild = tree->children[child];
-        // Section 2.1(a)
+        // Section 2.1(a) and Section 2.4(d)
         if (currChild->token_code == TOK_STRUCT) {
-            fprintf(oil_file, "struct s_%s {\n", currChild->children[0]->lexinfo->c_str());
+            fprintf(oil_file, "s_%s {\n", currChild->children[0]->lexinfo->c_str());
             for (size_t childIdx = 1; childIdx < currChild->children.size(); childIdx++) {
                 fprintf(oil_file, "%s", eight_spaces.c_str());
                 emit_field_name(currChild->children[childIdx], currChild->children[0]->lexinfo);
@@ -90,7 +150,7 @@ void emit_struct(astree* tree) {
 
 // Section 3.1
 void emit_prolog() {
-    fprintf(oil_file, "This is the prolog\n");
+    fprintf(oil_file, "#define __OCLIB_C__\n#include \"oclib.oh\"\n\n");
 }
 
 // Section 3.1
