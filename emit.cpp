@@ -97,14 +97,35 @@ void emit_params (astree* root) {
 }
 */
 
+void emit_func_body(astree* root){
+   
+   for (auto i : root->children){
+      
+      switch (i->symbol){
+        
+         case TOK_BLOCK: emit_block (root); break;
+        
+         case TOK_WHILE: emit_while (root); break;
+        
+         case TOK_IF: emit_if (root); break;
+        
+         case TOK_IFELSE: emit_ifelse (root); break;
+        
+         case TOK_RETURNVOID: emit_returnvoid (root); break;
+        
+         case TOK_RETURN: emit_return (root); break;
+
+         default: break;    
+ 
+       //default: expr_visit (root);
+      }
+   }
+
+}
+
 // Helper function for emit_function
 void emit_func_name (astree* root) {
-   attr_bitset attrs = node_attrs(root);
 
-   if (attrs.test(ATTR_int)) {
-      fprintf (oil_file, "int ");   
-   }
-/*
    if (root->sym->attributes[ATTR_int]) {
       fprintf (oil_file, "int ");
    }
@@ -113,7 +134,7 @@ void emit_func_name (astree* root) {
    }
    if (root->sym->attributes[ATTR_string]) {
       fprintf (oil_file, "char* ");
-   }*/
+   }
 }
 
 void emit_params (astree* root) {
@@ -135,14 +156,14 @@ void emit_params (astree* root) {
 // Section 2.1(d) and MSI
 void emit_function(astree* tree) {
     for (auto child : tree->children) {
-    //    if (child->token_code == TOK_FUNCTION) {
+        if (child->token_code == TOK_FUNCTION) {
             emit_func_name(child->children[0]);
             fprintf(oil_file, "__%s (\n", child->children[0]->children.back()->lexinfo->c_str());
             emit_params(child->children[1]);
             fprintf(oil_file, "{\n");
             //emit_func_body(child->children[2]);
             fprintf(oil_file, "}\n");
-      //  }
+        }
     }
 }
 

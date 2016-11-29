@@ -1,0 +1,17 @@
+# Makefile.dep created Mon Nov 28 23:35:37 PST 2016 by make
+main.o: main.cpp auxlib.h stringset.h astree.h lyutils.h yyparse.h \
+ tablemanager.h symtable.h symstack.h emit.h
+auxlib.o: auxlib.cpp auxlib.h
+stringset.o: stringset.cpp stringset.h
+astree.o: astree.cpp astree.h auxlib.h stringset.h lyutils.h yyparse.h \
+ symtable.h
+lyutils.o: lyutils.cpp auxlib.h lyutils.h astree.h yyparse.h stringset.h
+symtable.o: symtable.cpp symtable.h lyutils.h astree.h auxlib.h yyparse.h
+symstack.o: symstack.cpp symstack.h symtable.h lyutils.h astree.h \
+ auxlib.h yyparse.h
+tablemanager.o: tablemanager.cpp tablemanager.h astree.h auxlib.h \
+ symtable.h lyutils.h yyparse.h symstack.h
+emit.o: emit.cpp emit.h auxlib.h lyutils.h astree.h yyparse.h stringset.h \
+ symtable.h
+yylex.o: yylex.cpp lyutils.h astree.h auxlib.h yyparse.h stringset.h
+yyparse.o: yyparse.cpp astree.h auxlib.h lyutils.h yyparse.h
