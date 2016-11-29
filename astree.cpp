@@ -4,12 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 #include "astree.h"
 #include "stringset.h"
 #include "lyutils.h"
 #include "symtable.h"
 
+
+// Asg5: Section 3.1(b)
+vector<astree*> string_const_queue;
 
 astree::astree (int token_code_, const location& lloc_, 
                 const char* info) {
@@ -180,5 +184,12 @@ void asg2_astree_print (FILE* tok_file, int token_code,
    fprintf(tok_file, "%3lu %2lu.%.3lu %3d %-10s (%s)\n",
          lexer::lloc.filenr, lexer::lloc.linenr, lexer::lloc.offset,
          token_code, parser::get_tname(token_code), yytext);
+}
+
+void asg5_string_const_queue (int token_code, astree* yylval) {
+   // Asg5: Section 3.1(b)
+   if (token_code == TOK_STRINGCON) {
+      string_const_queue.push_back(yylval);
+   }
 }
 
