@@ -24,6 +24,7 @@ void emit_main(astree* tree) {
 void emit_statement(astree* node) {
 	
 }
+*/
 
 // Helper function for Section 3.2 that returns the name of the operand
 string emit_oper_name(astree* node) {
@@ -78,13 +79,38 @@ void emit_while(astree* tree) {
 	emit_statement(tree->children[1]);
 	fprintf(oil_file, "goto while_%d_%d_%d;\n break_%d_%d_%d:;\n", tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset, tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
 }
-*/
 
-/*
-void emit_params (astree* root) {
-   
-   for (size_t i = 0; i < root->children.size(); ++i)
-   {
+// Helper function for emit_function
+void emit_func_body(astree* root) {
+   for (auto i : root->children) {
+      switch (i->symbol) {
+         case TOK_BLOCK: 
+             emit_block (root); 
+             break;
+         case TOK_WHILE: 
+             emit_while (root); 
+             break;
+         case TOK_IF: 
+             emit_if (root); 
+             break;
+         case TOK_IFELSE: 
+             emit_ifelse (root); 
+             break;
+         case TOK_RETURNVOID: 
+             emit_return_wo_oper (root); 
+             break;
+         case TOK_RETURN: 
+             emit_return_w_oper (root); 
+             break;
+         default: 
+             break;
+      }
+   }
+}
+
+// Helper function for emit_function
+void emit_params (astree* root) {  
+   for (size_t i = 0; i < root->children.size(); i++) {
       fprintf (oil_file, "%s", eight_spaces.c_str());
       emit_func_name (root->children[i]);
       fprintf (oil_file, "_%ld_%s", root->children[i]->sym->block_nr,
@@ -93,39 +119,10 @@ void emit_params (astree* root) {
          fprintf (oil_file, ",\n");
    }
    fprintf (oil_file, ")\n");
-
-}
-*/
-
-void emit_func_body(astree* root){
-   
-   for (auto i : root->children){
-      
-      switch (i->symbol){
-        
-         case TOK_BLOCK: emit_block (root); break;
-        
-         case TOK_WHILE: emit_while (root); break;
-        
-         case TOK_IF: emit_if (root); break;
-        
-         case TOK_IFELSE: emit_ifelse (root); break;
-        
-         case TOK_RETURNVOID: emit_returnvoid (root); break;
-        
-         case TOK_RETURN: emit_return (root); break;
-
-         default: break;    
- 
-       //default: expr_visit (root);
-      }
-   }
-
 }
 
 // Helper function for emit_function
 void emit_func_name (astree* root) {
-
    if (root->sym->attributes[ATTR_int]) {
       fprintf (oil_file, "int ");
    }
@@ -137,22 +134,6 @@ void emit_func_name (astree* root) {
    }
 }
 
-void emit_params (astree* root) {
-
-   for (size_t i = 0; i < root->children.size(); ++i)
-   {
-      fprintf (oil_file, "%s", eight_spaces.c_str());
-      emit_func_name (root->children[i]);
-      fprintf (oil_file, "_%ld_%s", root->children[i]->sym->block_nr,
-            root->children[i]->children.back()->lexinfo->c_str());
-      if (i < root->children.size() - 1)
-         fprintf (oil_file, ",\n");
-   }
-   fprintf (oil_file, ")\n");
-
-}
-
-
 // Section 2.1(d) and MSI
 void emit_function(astree* tree) {
     for (auto child : tree->children) {
@@ -161,7 +142,7 @@ void emit_function(astree* tree) {
             fprintf(oil_file, "__%s (\n", child->children[0]->children.back()->lexinfo->c_str());
             emit_params(child->children[1]);
             fprintf(oil_file, "{\n");
-            //emit_func_body(child->children[2]);
+            emit_func_body(child->children[2]);
             fprintf(oil_file, "}\n");
         }
     }
@@ -246,6 +227,5 @@ void emit_everything(astree* tree) {
     emit_header();
     emit_program(tree);
     emit_main(tree);
-    emit_function(tree);
 }
 
