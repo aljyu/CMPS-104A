@@ -15,8 +15,8 @@ void emit_global_init(astree* tree) {
 // Section 3.1(d)
 void emit_main(astree* tree) {
 	fprintf(oil_file, "void __ocmain (void)\n");
-	emit_global_init(tree);
-//	emit_all(tree);
+//	emit_global_init(tree);
+	//emit(tree);
 }
 
 /*
@@ -115,7 +115,7 @@ void emit_global_vars(astree* tree) {
 */
 
 // Section 2.1(b)
-void emit_string_const() {
+void emit_stringdef() {
 // MSI: Maybe use block_nr of yyprse_astree instead?
     int charIndex;
 
@@ -149,19 +149,25 @@ void emit_struct(astree* tree) {
 }
 
 // Section 3.1
-void emit_prolog() {
+//void emit_prolog() {
+void emit_header() {
     fprintf(oil_file, "#define __OCLIB_C__\n#include \"oclib.oh\"\n\n");
 }
 
+// Functions that go inside of emit_program() according to MSI
+void emit_program(astree* tree) {
+//  emit_struct(tree);
+    emit_stringdef();
+    //emit_vardef();
+//    emit_global_vars(tree);
+    //emit_function(tree);
+}
+
 // Section 3.1
-void emit_all(astree* tree) {
-    emit_prolog();
-    emit_struct(tree);
-    emit_string_const();
-/*
-    emit_global_vars(tree);
-    emit_functions(tree);
-*/
+void emit_everything(astree* tree) {
+    //emit_prolog();
+    emit_header();
+    emit_program(tree);
     emit_main(tree);
 }
 

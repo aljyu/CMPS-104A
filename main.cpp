@@ -26,9 +26,11 @@ using namespace std;
 #include "astree.h"
 #include "lyutils.h"
 #include "tablemanager.h"
+#include "emit.h"
 
 FILE* tok_file;
 FILE* sym_file;
+FILE* oil_file;
 // A global counter that represents the next block number that is 
 // to be used.
 // It is initially set to 1.
@@ -65,11 +67,13 @@ void cpplines () {
     char* tok_name = new char[1024];
     char* ast_name = new char[1024];
     char* sym_name = new char[1024];
+    char* oil_name = new char[1024];
 
     strcpy(str_name, program_basename);
     strcpy(tok_name, program_basename);
     strcpy(ast_name, program_basename);
     strcpy(sym_name, program_basename);
+    strcpy(oil_name, program_basename);
 
     const char* str_file_name = strcat(str_name, ".str");
     FILE* str_file = fopen(str_file_name, "w");
@@ -79,6 +83,8 @@ void cpplines () {
     FILE* ast_file = fopen(ast_file_name, "w");
     const char* sym_file_name = strcat(sym_name, ".sym");
     sym_file = fopen(sym_file_name, "w");
+    const char* oil_file_name = strcat(oil_name, ".oil");
+    oil_file = fopen(oil_file_name, "w");
 
     // Check if the opened file has been opened properly
     if (str_file == NULL) {
@@ -95,6 +101,10 @@ void cpplines () {
     }
     if (sym_file == NULL) {
         syserrprintf(sym_file_name);
+        exit_status = EXIT_FAILURE;
+    }
+    if (oil_file == NULL) {
+        syserrprintf(oil_file_name);
         exit_status = EXIT_FAILURE;
     }
 
@@ -122,8 +132,7 @@ void cpplines () {
     */
 
     dump(ast_file, yyparse_astree);
-
-    //myastree->free_ast(yyparse_astree);
+    emit_everything(yyparse_astree);
 
     // Close the opened files
     fclose(str_file);
@@ -134,6 +143,8 @@ void cpplines () {
     delete[] ast_name;
     fclose(sym_file);
     delete[] sym_name;
+    fclose(oil_file);
+    delete[] oil_name;
 }
 
 // Open a pipe from the C preprocessor.
