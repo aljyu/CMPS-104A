@@ -6,5 +6,6 @@ rm *.sym
 rm *.err
 rm *.out
 rm *.log
+rm *.oil
 ls
 

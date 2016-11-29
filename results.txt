@@ -1,0 +1,215 @@
+stringset[   0]:   16579916199511856337 0xfd3968->"getln"
+                     4706206694200543916 0xfd1d48->","
+stringset[   3]:   10419262864770506158 0xfd3198->"endl"
+stringset[   4]:    4017852018407011111 0xfd1e78->"file"
+                    10838281452030117757 0xfd24d8->"b"
+stringset[   6]:    1124216861911730172 0xfd3bb8->"[]"
+stringset[   8]:    9386170080689500517 0xfd1c48->"expr"
+stringset[   9]:   12623033807595961729 0xfcd5c8->"__assert_fail"
+stringset[  12]:   15816506932648033945 0xfd1a98->"("
+stringset[  17]:    5058535866275092623 0xfd3658->"getw"
+stringset[  19]:   10959529184379665549 0xfd2898->"c"
+stringset[  22]:   15665058248423044574 0xfd2648->"puti"
+stringset[  23]:   12868445110721718657 0xfd1ee8->")"
+stringset[  24]:    6253375586064260614 0xfd2c68->"i"
+stringset[  28]:    8545990094689704659 0xfd2dd8->"puts"
+stringset[  29]:   12291392672316406109 0xfd2018->"line"
+stringset[  31]:    6142509188972423790 0xfcb4f8->""
+stringset[  33]:    5599151657291348184 0xfd3408->"getc"
+stringset[  35]:    8231216274321885541 0xfd4318->""Hello, world!\n""
+stringset[  37]:    2611290532865012865 0xfd2318->"putb"
+stringset[  38]:   12517137738049778414 0xfd3d98->"getargv"
+                    12597418120160561823 0xfd1cb8->"int"
+stringset[  39]:    6414370376350317282 0xfd3028->"s"
+stringset[  40]:   11911796782241914524 0xfd16e8->"void"
+stringset[  42]:    5344662657899890615 0xfd2218->";"
+stringset[  44]:   16711936661946036647 0xfd3de8->"exit"
+                    13497578857207247412 0xfd1b58->"string"
+stringset[  45]:   12875337389281854647 0xfd41a8->"status"
+stringset[  46]:   10524007781696235770 0xfd2268->"putc"
+load_factor = 0.617
+bucket_count = 47
+max_bucket_size = 2
+# 1 "01-hello.oc"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "01-hello.oc"
+# 1 "oclib.oh" 1
+# 27 "oclib.oh"
+  7 27.001 258 TOK_VOID   (void)
+  7 27.006 279 TOK_IDENT  (__assert_fail)
+  7 27.020  40 '('        (()
+  7 27.021 262 TOK_STRING (string)
+  7 27.028 279 TOK_IDENT  (expr)
+  7 27.032  44 ','        (,)
+  7 27.034 262 TOK_STRING (string)
+  7 27.041 279 TOK_IDENT  (file)
+  7 27.045  44 ','        (,)
+  7 27.047 261 TOK_INT    (int)
+  7 27.051 279 TOK_IDENT  (line)
+  7 27.055  41 ')'        ())
+  7 27.056  59 ';'        (;)
+  7 28.001 258 TOK_VOID   (void)
+  7 28.006 279 TOK_IDENT  (putb)
+  7 28.011  40 '('        (()
+  7 28.012 261 TOK_INT    (int)
+  7 28.016 279 TOK_IDENT  (b)
+  7 28.017  41 ')'        ())
+  7 28.018  59 ';'        (;)
+  7 29.001 258 TOK_VOID   (void)
+  7 29.006 279 TOK_IDENT  (putc)
+  7 29.011  40 '('        (()
+  7 29.012 261 TOK_INT    (int)
+  7 29.016 279 TOK_IDENT  (c)
+  7 29.017  41 ')'        ())
+  7 29.018  59 ';'        (;)
+  7 30.001 258 TOK_VOID   (void)
+  7 30.006 279 TOK_IDENT  (puti)
+  7 30.011  40 '('        (()
+  7 30.012 261 TOK_INT    (int)
+  7 30.016 279 TOK_IDENT  (i)
+  7 30.017  41 ')'        ())
+  7 30.018  59 ';'        (;)
+  7 31.001 258 TOK_VOID   (void)
+  7 31.006 279 TOK_IDENT  (puts)
+  7 31.011  40 '('        (()
+  7 31.012 262 TOK_STRING (string)
+  7 31.019 279 TOK_IDENT  (s)
+  7 31.020  41 ')'        ())
+  7 31.021  59 ';'        (;)
+  7 32.001 258 TOK_VOID   (void)
+  7 32.006 279 TOK_IDENT  (endl)
+  7 32.011  40 '('        (()
+  7 32.012  41 ')'        ())
+  7 32.013  59 ';'        (;)
+  7 33.001 261 TOK_INT    (int)
+  7 33.005 279 TOK_IDENT  (getc)
+  7 33.010  40 '('        (()
+  7 33.011  41 ')'        ())
+  7 33.012  59 ';'        (;)
+  7 34.001 262 TOK_STRING (string)
+  7 34.008 279 TOK_IDENT  (getw)
+  7 34.013  40 '('        (()
+  7 34.014  41 ')'        ())
+  7 34.015  59 ';'        (;)
+  7 35.001 262 TOK_STRING (string)
+  7 35.008 279 TOK_IDENT  (getln)
+  7 35.014  40 '('        (()
+  7 35.015  41 ')'        ())
+  7 35.016  59 ';'        (;)
+  7 36.001 262 TOK_STRING (string)
+  7 36.007 272 TOK_ARRAY  ([])
+  7 36.010 279 TOK_IDENT  (getargv)
+  7 36.018  40 '('        (()
+  7 36.019  41 ')'        ())
+  7 36.020  59 ';'        (;)
+  7 37.001 258 TOK_VOID   (void)
+  7 37.006 279 TOK_IDENT  (exit)
+  7 37.011  40 '('        (()
+  7 37.012 261 TOK_INT    (int)
+  7 37.016 279 TOK_IDENT  (status)
+  7 37.022  41 ')'        ())
+  7 37.023  59 ';'        (;)
+# 5 "01-hello.oc" 2
+  8  6.001 279 TOK_IDENT  (puts)
+  8  6.006  40 '('        (()
+  8  6.007 282 TOK_STRINGCON ("Hello, world!\n")
+  8  6.024  41 ')'        ())
+  8  6.025  59 ';'        (;)
+ROOT "" (0.0.0) {0} 
+|   PROTOTYPE "" (7.27.1) {0} 
+|   |   VOID "void" (7.27.1) {0} 
+|   |   |   DECLID "__assert_fail" (7.27.6) {0} void function 
+|   |   PARAMLIST "(" (7.27.20) {1} 
+|   |   |   STRING "string" (7.27.21) {1} 
+|   |   |   |   DECLID "expr" (7.27.28) {1} string variable param lval 
+|   |   |   STRING "string" (7.27.34) {1} 
+|   |   |   |   DECLID "file" (7.27.41) {1} string variable param lval 
+|   |   |   INT "int" (7.27.47) {1} 
+|   |   |   |   DECLID "line" (7.27.51) {1} int variable param lval 
+|   PROTOTYPE "" (7.28.1) {0} 
+|   |   VOID "void" (7.28.1) {0} 
+|   |   |   DECLID "putb" (7.28.6) {0} void function 
+|   |   PARAMLIST "(" (7.28.11) {2} 
+|   |   |   INT "int" (7.28.12) {2} 
+|   |   |   |   DECLID "b" (7.28.16) {2} int variable param lval 
+|   PROTOTYPE "" (7.29.1) {0} 
+|   |   VOID "void" (7.29.1) {0} 
+|   |   |   DECLID "putc" (7.29.6) {0} void function 
+|   |   PARAMLIST "(" (7.29.11) {3} 
+|   |   |   INT "int" (7.29.12) {3} 
+|   |   |   |   DECLID "c" (7.29.16) {3} int variable param lval 
+|   PROTOTYPE "" (7.30.1) {0} 
+|   |   VOID "void" (7.30.1) {0} 
+|   |   |   DECLID "puti" (7.30.6) {0} void function 
+|   |   PARAMLIST "(" (7.30.11) {4} 
+|   |   |   INT "int" (7.30.12) {4} 
+|   |   |   |   DECLID "i" (7.30.16) {4} int variable param lval 
+|   PROTOTYPE "" (7.31.1) {0} 
+|   |   VOID "void" (7.31.1) {0} 
+|   |   |   DECLID "puts" (7.31.6) {0} void function 
+|   |   PARAMLIST "(" (7.31.11) {5} 
+|   |   |   STRING "string" (7.31.12) {5} 
+|   |   |   |   DECLID "s" (7.31.19) {5} string variable param lval 
+|   PROTOTYPE "" (7.32.1) {0} 
+|   |   VOID "void" (7.32.1) {0} 
+|   |   |   DECLID "endl" (7.32.6) {0} void function 
+|   |   PARAMLIST "(" (7.32.11) {6} 
+|   PROTOTYPE "" (7.33.1) {0} 
+|   |   INT "int" (7.33.1) {0} 
+|   |   |   DECLID "getc" (7.33.5) {0} int function 
+|   |   PARAMLIST "(" (7.33.10) {7} 
+|   PROTOTYPE "" (7.34.1) {0} 
+|   |   STRING "string" (7.34.1) {0} 
+|   |   |   DECLID "getw" (7.34.8) {0} string function 
+|   |   PARAMLIST "(" (7.34.13) {8} 
+|   PROTOTYPE "" (7.35.1) {0} 
+|   |   STRING "string" (7.35.1) {0} 
+|   |   |   DECLID "getln" (7.35.8) {0} string function 
+|   |   PARAMLIST "(" (7.35.14) {9} 
+|   PROTOTYPE "" (7.36.7) {0} 
+|   |   ARRAY "[]" (7.36.7) {0} 
+|   |   |   STRING "string" (7.36.1) {0} 
+|   |   |   DECLID "getargv" (7.36.10) {0} string array function 
+|   |   PARAMLIST "(" (7.36.18) {10} 
+|   PROTOTYPE "" (7.37.1) {0} 
+|   |   VOID "void" (7.37.1) {0} 
+|   |   |   DECLID "exit" (7.37.6) {0} void function 
+|   |   PARAMLIST "(" (7.37.11) {11} 
+|   |   |   INT "int" (7.37.12) {11} 
+|   |   |   |   DECLID "status" (7.37.16) {11} int variable param lval 
+|   CALL "(" (8.6.6) {0} 
+|   |   IDENT "puts" (8.6.1) {0} 
+|   |   STRINGCON ""Hello, world!\n"" (8.6.7) {0} string const 
+__assert_fail (7.27.6) {0} void function 
+    expr (7.27.28) {1} string variable param lval 
+    file (7.27.41) {1} string variable param lval 
+    line (7.27.51) {1} int variable param lval 
+
+putb (7.28.6) {0} void function 
+    b (7.28.16) {2} int variable param lval 
+
+putc (7.29.6) {0} void function 
+    c (7.29.16) {3} int variable param lval 
+
+puti (7.30.6) {0} void function 
+    i (7.30.16) {4} int variable param lval 
+
+puts (7.31.6) {0} void function 
+    s (7.31.19) {5} string variable param lval 
+
+endl (7.32.6) {0} void function 
+
+getc (7.33.5) {0} int function 
+
+getw (7.34.8) {0} string function 
+
+getln (7.35.8) {0} string function 
+
+getargv (7.36.10) {0} string array function 
+
+exit (7.37.6) {0} void function 
+    status (7.37.16) {11} int variable param lval 
+

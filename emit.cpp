@@ -80,8 +80,31 @@ void emit_while(astree* tree) {
 }
 */
 
+/*
+void emit_params (astree* root) {
+   
+   for (size_t i = 0; i < root->children.size(); ++i)
+   {
+      fprintf (oil_file, "%s", eight_spaces.c_str());
+      emit_func_name (root->children[i]);
+      fprintf (oil_file, "_%ld_%s", root->children[i]->sym->block_nr,
+            root->children[i]->children.back()->lexinfo->c_str());
+      if (i < root->children.size() - 1)
+         fprintf (oil_file, ",\n");
+   }
+   fprintf (oil_file, ")\n");
+
+}
+*/
+
 // Helper function for emit_function
 void emit_func_name (astree* root) {
+   attr_bitset attrs = node_attrs(root);
+
+   if (attrs.test(ATTR_int)) {
+      fprintf (oil_file, "int ");   
+   }
+/*
    if (root->sym->attributes[ATTR_int]) {
       fprintf (oil_file, "int ");
    }
@@ -90,20 +113,36 @@ void emit_func_name (astree* root) {
    }
    if (root->sym->attributes[ATTR_string]) {
       fprintf (oil_file, "char* ");
-   }
+   }*/
 }
+
+void emit_params (astree* root) {
+
+   for (size_t i = 0; i < root->children.size(); ++i)
+   {
+      fprintf (oil_file, "%s", eight_spaces.c_str());
+      emit_func_name (root->children[i]);
+      fprintf (oil_file, "_%ld_%s", root->children[i]->sym->block_nr,
+            root->children[i]->children.back()->lexinfo->c_str());
+      if (i < root->children.size() - 1)
+         fprintf (oil_file, ",\n");
+   }
+   fprintf (oil_file, ")\n");
+
+}
+
 
 // Section 2.1(d) and MSI
 void emit_function(astree* tree) {
     for (auto child : tree->children) {
-        if (child->token_code == TOK_FUNCTION) {
+    //    if (child->token_code == TOK_FUNCTION) {
             emit_func_name(child->children[0]);
             fprintf(oil_file, "__%s (\n", child->children[0]->children.back()->lexinfo->c_str());
-            //emit_params(child->children[1]);
+            emit_params(child->children[1]);
             fprintf(oil_file, "{\n");
             //emit_func_body(child->children[2]);
             fprintf(oil_file, "}\n");
-        }
+      //  }
     }
 }
 
@@ -186,5 +225,6 @@ void emit_everything(astree* tree) {
     emit_header();
     emit_program(tree);
     emit_main(tree);
+    emit_function(tree);
 }
 
