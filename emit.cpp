@@ -27,7 +27,249 @@ void emit_statement(astree* node) {
 */
 
 // Helper function for Section 3.2 that returns the name of the operand
-string emit_oper_name(astree* node) {
+string emit_oper_name(astree* root) {
+
+   string op;
+
+   switch (root->symbol)
+
+   {
+
+      case '=': 
+         string op1 = expr_visit (root->children[0]);
+         string op2 = expr_visit (root->children[1]);
+         fprintf (outf, "%s", eight_space.c_str());
+         fprintf (outf, "%s = %s;\n", op1.c_str(), op2.c_str());
+         
+         op = op1;
+         break;
+
+      case TOK_IDENT:
+
+
+
+         op = emit_ident (root);
+         break;
+
+      case '+':
+
+      case '-':
+
+      case '/':
+
+      case '*':
+
+      case '%':
+
+         string op1 = expr_visit (root->children[0]);
+         string op2 = expr_visit (root->children[1]);
+   
+         fprintf (outf, "%s", eight_space.c_str());
+         fprintf (outf, "int i%ld = %s %s %s;\n",
+            rnum, op1.c_str(), root->lexinfo->c_str(), op2.c_str());
+         stringstream result;
+         result << "i" << rnum++;
+         op = result.str(); 
+
+         break;
+
+      case TOK_EQ:
+
+      case TOK_NE:
+
+      case TOK_LT:
+
+      case TOK_GT:
+
+      case TOK_LE:
+
+      case TOK_GE:
+
+         string op1 = expr_visit (root->children[0]);
+         string op2 = expr_visit (root->children[1]);
+   
+         fprintf (outf, "%s", eight_space.c_str());
+         fprintf (outf, "char c%ld = %s %s %s;\n",
+            rnum, op1.c_str(), root->lexinfo->c_str(), op2.c_str());
+         stringstream result;
+         result << "c" << rnum++;
+
+
+         op = result.str();
+
+         break;
+
+      case TOK_POS:
+
+      case TOK_NEG: 
+
+         string op1 = expr_visit (root->children[0]);
+         fprintf (outf, "%s", eight_space.c_str());
+         fprintf (outf, "int i%ld = %s%s;\n",
+            rnum, root->lexinfo->c_str(), op1.c_str());
+         stringstream result;
+         result << "i" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case '!': 
+
+         string op1 = expr_visit (root->children[0]);
+         fprintf (outf, "%s", eight_space.c_str());
+         fprintf (outf, "char c%ld = %s%s;\n",
+            rnum, root->lexinfo->c_str(), op1.c_str());
+         stringstream result;
+         result << "c" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case TOK_ORD: 
+
+         string op1 = expr_visit (root->children[0]);
+         fprintf (outf, "%s", eight_space.c_str());
+         fprintf (outf, "int i%ld = (int)%s;\n",
+            rnum, op1.c_str());
+         stringstream result;
+         result << "i" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case TOK_CHR:
+
+         string op1 = expr_visit (root->children[0]);
+         fprintf (outf, "%s", eight_space.c_str());
+         fprintf (outf, "char c%ld = (char)%s;\n",
+            rnum, op1.c_str());
+         stringstream result;
+         result << "c" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case TOK_NEW: 
+
+         fprintf (outf, "%s", eight_space.c_str());
+         emit_basetype (root->children[0]);
+         fprintf (outf, "p%ld = xcalloc (1, sizeof(struct %s));\n", rnum,
+             root->children[0]->sym->struct_name->c_str());
+         stringstream result;
+         result << "p" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case TOK_NEWARRAY: 
+
+         string op = expr_visit (root->children[1]);
+         fprintf (outf, "%s", eight_space.c_str());
+         emit_basetype (root->children[0]);
+         fprintf (outf, "* p%ld = xcalloc (%s, sizeof (",
+             rnum, op.c_str());
+         emit_basetype (root->children[0]);
+         fprintf (outf, "));\n");
+         stringstream result;
+         result << "p" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case TOK_NEWSTRING: 
+         
+         string op = expr_visit (root->children[0]);
+         fprintf (outf, "%s", eight_space.c_str());
+         fprintf (outf, "char* p%ld = xcalloc (%s, sizeof (char));\n",
+             rnum, op.c_str());
+         stringstream result;
+         result << "p" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case TOK_CHARCON: 
+
+         stringstream result;
+         result << root->lexinfo->c_str();
+
+         op = result.str();
+
+         break;
+
+      case TOK_STRINGCON: op = emit_stringcon (root); break;
+
+      case TOK_INTCON:
+
+         string val = root->lexinfo->c_str();
+         size_t pos = val.find_first_not_of ("0");
+         string result;
+         if (pos >= val.size()) result = "0";
+         else result = val.substr (pos);
+
+         op = result.str();
+
+         break;
+
+      case TOK_TRUE: op = emit_true (root); break;
+
+      case TOK_FALSE: op = emit_false (root); break;
+
+      case TOK_NULL: op = emit_false (root); break;
+
+      case TOK_INDEX:
+
+         string op1 = expr_visit (root->children[0]);
+         string op2 = expr_visit (root->children[1]);
+   
+         fprintf (outf, "%s", eight_space.c_str());
+         emit_basetype (root->children[0]);
+         fprintf (outf, "a%ld = &%s[%s];\n", rnum, op1.c_str(), op2.c_str());
+         stringstream result;
+         result << "*a" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case '.': 
+
+         string op1 = expr_visit (root->children[0]);
+         string op2 = expr_visit (root->children[1]);
+   
+         fprintf (outf, "%s", eight_space.c_str());
+         emit_basetype (root->children[1]);
+         fprintf (outf, "*a%ld = &%s->%s;\n", rnum, op1.c_str(), op2.c_str());
+         stringstream result;
+         result << "*a" << rnum++;
+
+         op = result.str();
+
+         break;
+
+      case TOK_FIELD: 
+
+         if (root->sym->owning_struct == nullptr) return "";
+         stringstream result;
+         result << "f_" << root->sym->owning_struct->c_str() << "_" <<
+                     root->lexinfo->c_str();
+
+         op = result.str();
+
+         break;
+
+      case TOK_CALL: op = emit_call (root); break;
+   }
+return op;
+
+
 	return ;
 }
 
