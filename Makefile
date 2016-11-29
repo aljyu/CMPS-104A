@@ -4,7 +4,7 @@ MKDEP      = g++ -MM -std=gnu++14
 MKFILE     = Makefile
 DEPFILE    = Makefile.dep
 SOURCES    = main.cpp auxlib.cpp stringset.cpp astree.cpp lyutils.cpp \
-             symtable.cpp symstack.cpp tablemanager.cpp
+             symtable.cpp symstack.cpp tablemanager.cpp emit.cpp
 LSOURCES   = scanner.l
 YSOURCES   = parser.y
 CLGEN      = yylex.cpp
@@ -14,7 +14,7 @@ LREPORT    = yylex.output
 YREPORT    = yyparse.output
 
 HEADERS    = auxlib.h stringset.h astree.h lyutils.h yyparse.h \
-             symtable.h symstack.h tablemanager.h
+             symtable.h symstack.h tablemanager.h emit.h
 OBJECTS    = ${SOURCES:.cpp=.o} yyparse.o yylex.o
 EXECBIN    = oc
 SRCFILES   = ${HEADERS} ${SOURCES} ${MKFILE} ${LSOURCES} ${YSOURCES}
