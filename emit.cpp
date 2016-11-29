@@ -6,6 +6,25 @@ string eight_spaces = "        ";
 // Section 3.1(b)
 extern vector<struct astree*> string_const_queue;
 
+void emit_basetype (astree* root) {
+   if (root->sym->attributes[ATTR_int])
+      fprintf (outf, "int");
+
+   if (root->sym->attributes[ATTR_void])
+      fprintf (outf, "void");
+
+   if (root->sym->attributes[ATTR_string])
+      fprintf (outf, "char*");
+
+   if (root->sym->attributes[ATTR_struct])
+      fprintf (outf, "struct %s*", root->sym->struct_name->c_str());
+
+   if (root->sym->attributes[ATTR_array])
+      fprintf (outf, "*");
+
+   fprintf (outf, " ");
+}
+
 
 // Section 2.1
 void emit_global_init(astree* tree) {
@@ -18,6 +37,22 @@ void emit_main(astree* tree) {
 //	emit_global_init(tree);
 	//emit(tree);
 }
+
+void emit_function(astree* child) {
+    leftChild = child->children[0];
+    rightChild = child->children[1];
+
+    emit_basetype(leftChild);
+   // fprintf(oil_file, "__%s (\n", leftChild->children.back()->lexinfo->c_str());
+//    emit_parameter(rightChild);
+    //fprintf(oil_file, "{\n");
+//    emit_block(child->children[2]);
+    //fprintf(oil_file, "}\n");
+}
+
+
+
+
 
 /*
 // Helper function for emit_while that emits the statement
