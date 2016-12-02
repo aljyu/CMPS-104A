@@ -42,6 +42,7 @@ void emit_node(astree* node) {
     
 }
 
+*/
 // Section 3.2(h)
 // The "return" statement does not have an operand. 
 // Therefore, just return.
@@ -49,49 +50,54 @@ void emit_return_wo_oper() {
     fprintf(oil_file, "%s return;\n", eight_spaces.c_str());
 }
 
+//////////////////////////////////////////////////////////////////////////////
 // Section 3.2(h)
 // The "return" statement has an operand. Therefore, return the operand.
 void emit_return_w_oper(astree* tree) {
-    fprintf(oil_file, "%sreturn %s;\n", eight_spaces.c_str(), );
+    fprintf(oil_file, "%sreturn ;\n", eight_spaces.c_str()/*, emit_oper_name(tree)*/);
+    //fprintf(oil_file, "%sreturn %s;\n", eight_spaces.c_str(), emit_oper_name(tree));
 }
 
 // Section 3.2(g)
 void emit_if(astree* tree) {
-    emit_node(tree->children[0]);
-    fprintf(oil_file, "%sif (!%s) goto fi_%d_%d_%d;\n", 
-            eight_spaces.c_str(), emit_oper_name(tree), 
+    //emit_node(tree->children[0]);
+    fprintf(oil_file, "%sif (!) goto fi_%ld_%ld_%ld;\n", 
+    //fprintf(oil_file, "%sif (!%s) goto fi_%d_%d_%d;\n", 
+            eight_spaces.c_str(), /*emit_oper_name(tree), */
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
-    emit_node(tree->children[1]);
-    fprintf(oil_file, "fi_%d_%d_%d:;\n", tree->lloc.filenr, 
+    //emit_node(tree->children[1]);
+    fprintf(oil_file, "fi_%ld_%ld_%ld:;\n", tree->lloc.filenr, 
             tree->lloc.linenr, tree->lloc.offset);
 }
 
 // Section 3.2(f)
 void emit_ifelse(astree* tree) {
-    emit_node(tree->children[0]);
-    fprintf(oil_file, "%sif (!%s) goto else_%d_%d_%d;\n", 
-            eight_spaces.c_str(), emit_oper_name(tree), 
+    //emit_node(tree->children[0]);
+    fprintf(oil_file, "%sif (!) goto else_%ld_%ld_%ld;\n", 
+    //fprintf(oil_file, "%sif (!%s) goto else_%d_%d_%d;\n", 
+            eight_spaces.c_str(), /*emit_oper_name(tree), */
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
-    emit_node(tree->children[1]);
-    fprintf(oil_file, "%sgoto fi_%d_%d_%d;\n", eight_spaces.c_str(), 
+    //emit_node(tree->children[1]);
+    fprintf(oil_file, "%sgoto fi_%ld_%ld_%ld;\n", eight_spaces.c_str(), 
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
-    fprintf(oil_file, "else_%d_%d_%d:;\n", tree->lloc.filenr, 
+    fprintf(oil_file, "else_%ld_%ld_%ld:;\n", tree->lloc.filenr, 
             tree->lloc.linenr, tree->lloc.offset);
-    emit_node(tree->children[2]);
-    fprintf(oil_file, "fi_%d_%d_%d:;\n", tree->lloc.filenr, 
+    //emit_node(tree->children[2]);
+    fprintf(oil_file, "fi_%ld_%ld_%ld:;\n", tree->lloc.filenr, 
             tree->lloc.linenr, tree->lloc.offset);
 }
 
 // Section 3.2(e)
 void emit_while(astree* tree) {
-    fprintf(oil_file, "while_%d_%d_%d:\n;", tree->lloc.filenr, 
+    fprintf(oil_file, "while_%ld_%ld_%ld:\n;", tree->lloc.filenr, 
             tree->lloc.linenr, tree->lloc.offset);
-    emit_node(tree->children[0]);
-    fprintf(oil_file, "%sif (!%s) goto break_%d_%d_%d;\n", 
-            eight_spaces.c_str(), emit_oper_name(tree), 
+    //emit_node(tree->children[0]);
+    fprintf(oil_file, "%sif (!) goto break_%ld_%ld_%ld;\n", 
+    //fprintf(oil_file, "%sif (!%s) goto break_%d_%d_%d;\n", 
+            eight_spaces.c_str(), /*emit_oper_name(tree), */
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
-    emit_statement(tree->children[1]);
-    fprintf(oil_file, "goto while_%d_%d_%d;\n break_%d_%d_%d:;\n", 
+    //emit_statement(tree->children[1]);
+    fprintf(oil_file, "goto while_%ld_%ld_%ld;\n break_%ld_%ld_%ld:;\n", 
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset, 
             tree->lloc.filenr, tree->lloc.linenr, tree->lloc.offset);
 }
@@ -99,24 +105,24 @@ void emit_while(astree* tree) {
 // Helper function for emit_function
 void emit_func_body(astree* root) {
    for (auto i : root->children) {
-      switch (i->symbol) {
+      switch (i->token_code) {
          case TOK_BLOCK: 
-             emit_block (root); 
+//             emit_block (root); 
              break;
          case TOK_WHILE: 
-             emit_while (root); 
+             emit_while(root); 
              break;
          case TOK_IF: 
-             emit_if (root); 
+             emit_if(root); 
              break;
          case TOK_IFELSE: 
-             emit_ifelse (root); 
+             emit_ifelse(root); 
              break;
          case TOK_RETURNVOID: 
-             emit_return_wo_oper (root); 
+             emit_return_wo_oper(); 
              break;
          case TOK_RETURN: 
-             emit_return_w_oper (root); 
+             emit_return_w_oper(root); 
              break;
          default: 
              break;
@@ -159,12 +165,13 @@ void emit_function(astree* tree) {
                child->children[0]->children.back()->lexinfo->c_str());
             emit_params(child->children[1]);
             fprintf(oil_file, "{\n");
-            emit_func_body(child->children[2]);
+//            emit_func_body(child->children[2]);
             fprintf(oil_file, "}\n");
         }
     }
 }
 
+/*
 void emit_immediate_children(astree* tree) {
     for (int childIdx = 0; childIdx < tree->children.size(); 
          childIdx++) {

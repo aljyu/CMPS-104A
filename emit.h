@@ -19,8 +19,21 @@ void emit_field_name(astree* child, const string* childName);
 
 void emit_stringdef();
 
-void emit_function(astree* tree);
+void emit_return_wo_oper();
+
+void emit_return_w_oper(astree* tree);
+
+void emit_if(astree* tree);
+
+void emit_ifelse(astree* tree);
+
+void emit_while(astree* tree);
+
+void emit_func_body(astree* root);
+
+void emit_params(astree* root);
 
 void emit_func_name(astree* root);
 
-void emit_params(astree* root);
+void emit_function(astree* tree);
+
