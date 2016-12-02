@@ -13,6 +13,7 @@ extern stringset str_string_set_ADT;
    yylval = new astree (SYMBOL, lexer::lloc, yytext); \
    str_string_set_ADT.intern(yytext); \
    asg2_astree_print(tok_file, SYMBOL, yytext); \
+   asg5_string_const_queue(SYMBOL, yylval); \
    return SYMBOL; \
 }
 

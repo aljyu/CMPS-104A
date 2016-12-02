@@ -9,6 +9,7 @@
 
 #include "auxlib.h"
 
+
 // The enum for all the possible flags
 // ATRR_bitset_size is not actually used
 // but its value is equal to the number of attributes
@@ -75,6 +76,8 @@ void errllocprintf (const location&, const char* format, const char*);
 
 void asg2_astree_print (FILE* tok_file, int token_code, 
                        const char *yytext);
+
+void asg5_string_const_queue(int token_code, astree* yylval);
 
 #endif
 

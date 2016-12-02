@@ -1,7 +1,20 @@
-Username: aljyu
+This program was completed using pair programming.
+Partner: Alice Yu (aljyu@ucsc.edu)
+Partner: Andrew Lee (ale915@ucsc.edu)
 
-Please grade this assignment as a submission for assignment 4.
-Please note that before the mk.build command can be executed, 
-the command "make deps" must be executed first as per the TAs'
-instructions.
+We acknowledge that each partner is a programming pair should
+drive roughly 50% of the time the pair is working together, and
+at most 25% of an individual's effort for an assignment should
+be spend working alone. Any work done by a solitary programmer
+must be reviewed by the partner. The object is to work
+together, learning from each other, not to divide the work into
+two pieces with each partner working on a different peice.
 
+Alice Yu spent        _6_ hours working alone.
+Andrew Lee spent      _5_ hours working alone.
+We spent              _25_ hours working together.
+Alice Yu spent        _13_ hours driving.
+Andrew Lee spent      _12_ hours driving.
+
+Please grade the work submitted by aljyu@ucsc.edu
+and not the work submitted by ale915@ucsc.edu.

@@ -1,4 +1,4 @@
-// $Id: oclib.oh,v 1.32 2016-11-03 15:06:12-07 - - $
+// $Id: oclib.oh,v 1.33 2016-11-30 14:45:59-08 - - $
 
 #ifndef __OCLIB_OH__
 #define __OCLIB_OH__
@@ -15,6 +15,7 @@ char* __getw (void);
 char* __getln (void);
 char** __getargv (void);
 void __exit (int status);
+void ____assert_fail (char* expr, char* file, int line);
 
 #else
 #define EOF (-1)
